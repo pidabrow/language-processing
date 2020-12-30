@@ -1,5 +1,6 @@
 package io.pidabrow.languageprocessing.service;
 
+import io.pidabrow.languageprocessing.domain.Node;
 import io.pidabrow.languageprocessing.domain.Token;
 import io.pidabrow.languageprocessing.domain.Tree;
 import io.pidabrow.languageprocessing.dto.InputDto;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SkipGramService {
@@ -25,8 +27,7 @@ public class SkipGramService {
         int maxGapLength = inputDto.getMaxGapLength();
 
         Tree skipGramTree = new Tree();
-        skipGramTree.populateTree(tokens);
-
+        populateTree(skipGramTree, tokens);
 
         return ResultDto.builder()
                 .text(inputDto.getText())
@@ -34,5 +35,30 @@ public class SkipGramService {
                 .maxProductLength(inputDto.getMaxProductLength())
                 .result(skipGrams)
                 .build();
+    }
+
+    public Tree populateTree(Tree tree, List<Token> tokens) {
+        populateChildren(tree.getRoot(), tokens);
+
+        return tree;
+    }
+
+    private void populateChildren(Node parent, List<Token> tokens) {
+        parent.addChild(Tree.NIL_TOKEN);
+        tokens.stream()
+                .forEach(t -> {
+                    parent.addChild(t);
+                });
+
+        parent.getChildren()
+                .stream()
+                .forEach(child -> {
+                    if(!child.getToken().equals(Tree.NIL_TOKEN)) {
+                        int currentId = child.getToken().getTokenId();
+                        List<Token> followingTokens = tokens.stream().filter(t -> t.getTokenId() > currentId).collect(Collectors.toList());
+
+                        populateChildren(child, followingTokens);
+                    }
+                });
     }
 }
