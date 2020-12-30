@@ -2,6 +2,7 @@ package io.pidabrow.languageprocessing.controller;
 
 import io.pidabrow.languageprocessing.dto.InputDto;
 import io.pidabrow.languageprocessing.dto.ResultDto;
+import io.pidabrow.languageprocessing.enumeration.Mode;
 import io.pidabrow.languageprocessing.service.NGramService;
 import io.pidabrow.languageprocessing.service.SkipGramService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,25 @@ public class LanguageProcessingController {
         return new ResponseEntity<>(nGramService.generateNGrams(inputDto), HttpStatus.OK);
     }
 
-    @GetMapping("/skip-grams")
-    public ResponseEntity<ResultDto> handleGenerateSkipGrams(InputDto inputDto) {
+    @GetMapping("/n-grams/demo")
+    public ResponseEntity<ResultDto> handleGenerateNGramsDemo() {
+        InputDto inputDto = InputDto.builder()
+                .text("The quick brown fox jumps over the lazy dog")
+                .maxProductLength(3)
+                .mode(Mode.N_GRAM)
+                .build();
+
+        return new ResponseEntity<>(nGramService.generateNGrams(inputDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/skip-grams/demo")
+    public ResponseEntity<ResultDto> handleGenerateSkipGrams() {
+        InputDto inputDto = InputDto.builder()
+                .text("The quick brown fox jumps over the lazy dog")
+                .maxProductLength(3)
+                .maxGapLength(3)
+                .mode(Mode.SKIP_GRAM)
+                .build();
         return new ResponseEntity<>(skipGramService.generateSkipGrams(inputDto), HttpStatus.OK);
     }
 }

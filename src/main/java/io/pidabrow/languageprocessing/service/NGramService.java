@@ -4,6 +4,7 @@ import io.pidabrow.languageprocessing.dto.InputDto;
 import io.pidabrow.languageprocessing.dto.ResultDto;
 import io.pidabrow.languageprocessing.enumeration.Mode;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,15 +14,28 @@ import java.util.stream.IntStream;
 @Service
 public class NGramService {
 
+    private static final String WHITESPACE = " ";
+
     public ResultDto generateNGrams(InputDto inputDto) {
         List<String> nGrams = new ArrayList<>();
 
         String[] tokens = inputDto.getText().split(" ");
-        int maxProductLength = inputDto.getMaxProductLength();
+        int maxNGramLength = inputDto.getMaxProductLength();
 
-        IntStream.rangeClosed(1, maxProductLength).forEach(i -> {
+        IntStream.rangeClosed(1, maxNGramLength).forEach(nGramLength -> {
+            for (int currentTokenId = 0; currentTokenId + nGramLength <= tokens.length; currentTokenId++) {
 
+                StringBuilder builder = new StringBuilder();
+
+                for (int nextProductStartId = currentTokenId; nextProductStartId < currentTokenId + nGramLength; nextProductStartId++) {
+                    builder.append(tokens[nextProductStartId]).append(WHITESPACE);
+                }
+
+                nGrams.add(builder.toString());
+            }
         });
+
+
 
         return ResultDto.builder()
                 .text(inputDto.getText())

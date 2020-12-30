@@ -2,6 +2,7 @@ package io.pidabrow.languageprocessing.dto;
 
 import io.pidabrow.languageprocessing.enumeration.Mode;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class InputDto {
 
     @NotBlank
