@@ -1,6 +1,7 @@
 package io.pidabrow.languageprocessing.service;
 
 import io.pidabrow.languageprocessing.domain.Node;
+import io.pidabrow.languageprocessing.domain.SkipGramContainer;
 import io.pidabrow.languageprocessing.domain.Token;
 import io.pidabrow.languageprocessing.domain.Tree;
 import io.pidabrow.languageprocessing.dto.InputDto;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,7 @@ public class SkipGramService {
 
         Tree skipGramTree = new Tree();
         populateTree(skipGramTree, tokens);
+        extractSkipGramsFromTree(skipGramTree);
 
         return ResultDto.builder()
                 .text(inputDto.getText())
@@ -44,10 +47,10 @@ public class SkipGramService {
     }
 
     private void populateChildren(Node parent, List<Token> tokens) {
-        parent.addChild(Tree.NIL_TOKEN);
+        parent.addChild(Tree.NIL_TOKEN, parent);
         tokens.stream()
-                .forEach(t -> {
-                    parent.addChild(t);
+                .forEach(token -> {
+                    parent.addChild(token, parent);
                 });
 
         parent.getChildren()
@@ -60,5 +63,56 @@ public class SkipGramService {
                         populateChildren(child, followingTokens);
                     }
                 });
+    }
+
+    public List<SkipGramContainer> extractSkipGramsFromTree(Tree tree) {
+        List<SkipGramContainer> skipGrams = new ArrayList<>();
+        Stack<Node> stack = new Stack<>();
+
+        Node current = tree.getRoot();
+        current.markVisited();
+        stack.push(current);
+
+        while(!stack.isEmpty()) {
+            if(current.nonVisitedChildExists()) {
+                current = current.getNonVisitedChildByLowestId();
+            } else {
+                List<Token> tokens = stack.stream()
+                        .filter(e -> e.isNotRoot())
+                        .map(Node::getToken)
+                        .collect(Collectors.toList());
+
+                skipGrams.add(new SkipGramContainer(tokens));
+
+                stack.pop();
+                current = current.getParent();
+                continue;
+                // todo: push to stack?
+            }
+
+            if(current.isNotNil()) {
+                if(current.isNotRoot()) {
+                    current.markVisited();
+                    stack.push(current);
+                }
+            } else {
+                while(current.getParent().getNonVisitedChildByLowestId().isVisited() != false) {
+                    List<Token> tokens = stack.stream()
+                            .filter(e -> e.isNotRoot())
+                            .map(Node::getToken)
+                            .collect(Collectors.toList());
+
+                    skipGrams.add(new SkipGramContainer(tokens));
+
+                    stack.pop();
+                    current = current.getParent();
+                    if(current.getToken().equals(Tree.ROOT_TOKEN) && current.getNonVisitedChildByLowestId() == null) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return skipGrams;
     }
 }
