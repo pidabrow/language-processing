@@ -17,30 +17,27 @@ public class Tree {
     }
 
     public void populateTree(List<Token> tokens) {
-        tokens.stream()
-                .forEach(t -> {
-                    root.addChild(t);
-                });
-
-        root.getChildren()
-                .stream()
-                .forEach(c -> {
-                    int currentId = c.getToken().getTokenId();
-                    List<Token> followingTokens = tokens.stream().filter(t -> t.getTokenId() > currentId).collect(Collectors.toList());
-
-                    c.addChild(NIL_TOKEN);
-                    followingTokens.stream()
-                            .forEach(t -> {
-                                c.addChild(t);
-                            });
-                });
-
+        populateChildren(this.root, tokens);
     }
 
-    private void populateSubTree(Node startingNode, List<Token> tokens) {
+    private void populateChildren(Node parent, List<Token> tokens) {
+        parent.addChild(NIL_TOKEN);
         tokens.stream()
                 .forEach(t -> {
-                    startingNode.addChild(t);
+                    parent.addChild(t);
+                });
+
+        parent.getChildren()
+                .stream()
+                .forEach(child -> {
+                    if(!child.getToken().equals(NIL_TOKEN)) {
+                        int currentId = child.getToken().getTokenId();
+                        List<Token> followingTokens = tokens.stream().filter(t -> t.getTokenId() > currentId).collect(Collectors.toList());
+
+                        populateChildren(child, followingTokens);
+                    } else {
+                        System.out.println("NIL token. Parent: " + parent);
+                    }
                 });
     }
 }

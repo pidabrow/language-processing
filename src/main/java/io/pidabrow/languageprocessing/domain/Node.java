@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class Node {
@@ -21,5 +22,14 @@ public class Node {
         children.add(child);
 
         return child;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "tokenId=" + token.getTokenId() +
+                "tokenValue=" + token.getValue() +
+                ", children=" + children.stream().map(c -> c.getToken()).collect(Collectors.toList()) +
+                '}';
     }
 }
