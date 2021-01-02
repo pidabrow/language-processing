@@ -83,7 +83,7 @@ public class SkipGramService {
                         .collect(Collectors.toList());
 
                 SkipGramContainer skipGramContainer = new SkipGramContainer(tokens);
-                System.out.println(skipGramContainer.getPhrase());
+                System.out.println(skipGramContainer);
                 skipGrams.add(skipGramContainer);
 
                 stack.pop();
@@ -105,7 +105,7 @@ public class SkipGramService {
                             .collect(Collectors.toList());
 
                     SkipGramContainer skipGramContainer = new SkipGramContainer(tokens);
-                    System.out.println(skipGramContainer.getPhrase());
+                    System.out.println(skipGramContainer);
                     skipGrams.add(skipGramContainer);
 
                     stack.pop();
