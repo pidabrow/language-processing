@@ -82,7 +82,9 @@ public class SkipGramService {
                         .map(Node::getToken)
                         .collect(Collectors.toList());
 
-                skipGrams.add(new SkipGramContainer(tokens));
+                SkipGramContainer skipGramContainer = new SkipGramContainer(tokens);
+                System.out.println(skipGramContainer.getPhrase());
+                skipGrams.add(skipGramContainer);
 
                 stack.pop();
                 current = current.getParent();
@@ -102,7 +104,9 @@ public class SkipGramService {
                             .map(Node::getToken)
                             .collect(Collectors.toList());
 
-                    skipGrams.add(new SkipGramContainer(tokens));
+                    SkipGramContainer skipGramContainer = new SkipGramContainer(tokens);
+                    System.out.println(skipGramContainer.getPhrase());
+                    skipGrams.add(skipGramContainer);
 
                     stack.pop();
                     current = current.getParent();
