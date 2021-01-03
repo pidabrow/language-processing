@@ -44,6 +44,7 @@ public class SkipGramContainer {
     @Override
     public String toString() {
         return String.join(" ", tokens.stream().map(Token::getValue).collect(Collectors.toList()))
-                + (gapSizes.isEmpty() ? "" : " (gaps: " + gapSizes.stream().map(String::valueOf).collect(Collectors.joining(",")) + ")");
+                + ((gapSizes.isEmpty() || gapSizes.stream().filter(g -> g.intValue() > 0).findAny().isEmpty())
+                    ? "" : " (gaps: " + gapSizes.stream().map(String::valueOf).collect(Collectors.joining(",")) + ")");
     }
 }
