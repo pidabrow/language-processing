@@ -1,7 +1,7 @@
 package io.pidabrow.languageprocessing.service;
 
 import io.pidabrow.languageprocessing.domain.Node;
-import io.pidabrow.languageprocessing.domain.SkipGramContainer;
+import io.pidabrow.languageprocessing.domain.SkipGramWrapper;
 import io.pidabrow.languageprocessing.domain.Token;
 import io.pidabrow.languageprocessing.domain.Tree;
 import io.pidabrow.languageprocessing.dto.InputDto;
@@ -9,7 +9,6 @@ import io.pidabrow.languageprocessing.dto.ResultDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
@@ -18,43 +17,33 @@ import java.util.stream.Collectors;
 public class SkipGramService {
 
     public ResultDto generateSkipGrams(InputDto inputDto) {
-        List<String> skipGrams = new ArrayList<>();
-
-        String[] words = inputDto.getText().split(" ");
-        List<Token> tokens = new ArrayList<>();
-        for(int i = 0; i < words.length; i++) {
-            tokens.add(new Token(words[i], i));
-        }
+        List<Token> tokens = getTokens(inputDto.getText());
 
         int maxGapLength = inputDto.getMaxGapLength();
 
         Tree skipGramTree = new Tree();
         populateTree(skipGramTree, tokens);
-        extractSkipGramsFromTree(skipGramTree);
+        List<SkipGramWrapper> skipGrams = extractSkipGramsFromTree(skipGramTree);
+
+
 
         return ResultDto.builder()
                 .text(inputDto.getText())
                 .mode(inputDto.getMode())
                 .maxProductLength(inputDto.getMaxProductLength())
-                .result(skipGrams)
+                .result(skipGrams.stream().map(SkipGramWrapper::toString).collect(Collectors.toList()))
                 .build();
     }
 
-    public Tree populateTree(Tree tree, List<Token> tokens) {
+    public void populateTree(Tree tree, List<Token> tokens) {
         populateChildren(tree.getRoot(), tokens);
-
-        return tree;
     }
 
     private void populateChildren(Node parent, List<Token> tokens) {
         parent.addChild(Tree.NIL_TOKEN, parent);
-        tokens.stream()
-                .forEach(token -> {
-                    parent.addChild(token, parent);
-                });
+        tokens.forEach(token -> parent.addChild(token, parent));
 
         parent.getChildren()
-                .stream()
                 .forEach(child -> {
                     if(!child.getToken().equals(Tree.NIL_TOKEN)) {
                         int currentId = child.getToken().getTokenId();
@@ -65,8 +54,8 @@ public class SkipGramService {
                 });
     }
 
-    public List<SkipGramContainer> extractSkipGramsFromTree(Tree tree) {
-        List<SkipGramContainer> skipGrams = new ArrayList<>();
+    public List<SkipGramWrapper> extractSkipGramsFromTree(Tree tree) {
+        List<SkipGramWrapper> skipGrams = new ArrayList<>();
         Stack<Node> stack = new Stack<>();
 
         Node current = tree.getRoot();
@@ -78,18 +67,17 @@ public class SkipGramService {
                 current = current.getNonVisitedChildByLowestId();
             } else {
                 List<Token> tokens = stack.stream()
-                        .filter(e -> e.isNotRoot())
+                        .filter(Node::isNotRoot)
                         .map(Node::getToken)
                         .collect(Collectors.toList());
 
-                SkipGramContainer skipGramContainer = new SkipGramContainer(tokens);
-                System.out.println(skipGramContainer);
-                skipGrams.add(skipGramContainer);
+                SkipGramWrapper skipGramWrapper = new SkipGramWrapper(tokens);
+                System.out.println(skipGramWrapper);
+                skipGrams.add(skipGramWrapper);
 
                 stack.pop();
                 current = current.getParent();
                 continue;
-                // todo: push to stack?
             }
 
             if(current.isNotNil()) {
@@ -98,15 +86,15 @@ public class SkipGramService {
                     stack.push(current);
                 }
             } else {
-                while(current.getParent().getNonVisitedChildByLowestId().isVisited() != false) {
+                while(current.getParent().getNonVisitedChildByLowestId().isVisited()) {
                     List<Token> tokens = stack.stream()
-                            .filter(e -> e.isNotRoot())
+                            .filter(Node::isNotRoot)
                             .map(Node::getToken)
                             .collect(Collectors.toList());
 
-                    SkipGramContainer skipGramContainer = new SkipGramContainer(tokens);
-                    System.out.println(skipGramContainer);
-                    skipGrams.add(skipGramContainer);
+                    SkipGramWrapper skipGramWrapper = new SkipGramWrapper(tokens);
+                    System.out.println(skipGramWrapper);
+                    skipGrams.add(skipGramWrapper);
 
                     stack.pop();
                     current = current.getParent();
@@ -118,5 +106,14 @@ public class SkipGramService {
         }
 
         return skipGrams;
+    }
+
+    private List<Token> getTokens(String text) {
+        List<Token> tokens = new ArrayList<>();
+        String[] words = text.split(" ");
+        for(int i = 0; i < words.length; i++) {
+            tokens.add(new Token(words[i], i));
+        }
+        return tokens;
     }
 }

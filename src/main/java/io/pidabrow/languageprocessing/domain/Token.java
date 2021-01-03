@@ -8,6 +8,6 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class Token {
-    private String value;
-    private int tokenId;
+    private final String value;
+    private final int tokenId;
 }

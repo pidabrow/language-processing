@@ -2,12 +2,9 @@ package io.pidabrow.languageprocessing.service;
 
 import io.pidabrow.languageprocessing.dto.InputDto;
 import io.pidabrow.languageprocessing.dto.ResultDto;
-import io.pidabrow.languageprocessing.enumeration.Mode;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 

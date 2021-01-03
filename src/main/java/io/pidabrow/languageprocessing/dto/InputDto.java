@@ -4,7 +4,6 @@ import io.pidabrow.languageprocessing.enumeration.Mode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -15,11 +14,11 @@ import javax.validation.constraints.NotNull;
 public class InputDto {
 
     @NotBlank
-    private String text;
+    private final String text;
 
     @NotNull
-    private Mode mode;
+    private final Mode mode;
 
-    private Integer maxProductLength;
-    private Integer maxGapLength;
+    private final Integer maxProductLength;
+    private final Integer maxGapLength;
 }

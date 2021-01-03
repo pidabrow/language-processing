@@ -1,20 +1,17 @@
 package io.pidabrow.languageprocessing.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
 public class Node {
     private Node parent;
-    private Token token;
-    private List<Node> children;
+    private final Token token;
+    private final List<Node> children;
 
     private boolean visited;
 
@@ -29,11 +26,9 @@ public class Node {
         this.children = new ArrayList<>();
     }
 
-    public Node addChild(Token token, Node parent) {
+    public void addChild(Token token, Node parent) {
         Node child = new Node(token, parent);
         this.children.add(child);
-
-        return child;
     }
 
     public boolean nonVisitedChildExists() {
@@ -45,9 +40,9 @@ public class Node {
 
     public Node getNonVisitedChildByLowestId() {
         return children.stream()
-                .filter(c -> c.isVisited() == false && c.isNotNil())
+                .filter(c -> !c.isVisited() && c.isNotNil())
                 .min(Comparator.comparing(x -> x.getToken().getTokenId()))
-                .orElse(new Node(Tree.NIL_TOKEN, this)); // todo: verify this
+                .orElse(new Node(Tree.NIL_TOKEN, this));
     }
 
     public void markVisited() {
