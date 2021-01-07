@@ -8,15 +8,15 @@ TODO:
 
 (1) limiting max skip-gram length
 
-*naive solution - having the tree-based model in place along with all possible skip-grams it's easy to filter out the skip-grams that don't match max length
+* naive solution - having the tree-based model in place along with all possible skip-grams it's easy to filter out the skip-grams that don't match max length
 
-*optimal solution - while constructing the tree-based model, there should be information in each node what's the depth of given element. 
+* optimal solution - while constructing the tree-based model, there should be information in each node what's the depth of given element. 
 
 (2) limiting max gap size
 
-*naive solution - same as for max skip-gram length
+* naive solution - same as for max skip-gram length
 
-*optimal solution - while creating nodes in the tree-based model, there should be an additional constraing that will check what would be the gap size if the node were created. 
+* optimal solution - while creating nodes in the tree-based model, there should be an additional constraing that will check what would be the gap size if the node were created. 
 
 Running locally
 ====================
