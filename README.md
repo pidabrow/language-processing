@@ -1,10 +1,26 @@
 # language-processing
-Work in progress that needs some final tweaking. Running locally, on localhost:8080 and visiting localhost:8080/skip-gram/demo produces following output:
+Work in progress that needs some final tweaking. Running locally, on localhost:8080 and visiting localhost:8080/skip-gram/demo produces output like below. 
 
-# how to read this btw?
+Algorithm:
+The application constructs a tree-based model for consecutive words. Based on this structure, extracting all possible skip-grams is done using Depth First Serach.
+TODO:
+(1) limiting max skip-gram length
+-> naive solution - having the tree-based model in place along with all possible skip-grams it's easy to filter out the skip-grams that don't match max length
+-> optimal solution - while constructing the tree-based model, there should be information in each node what's the depth of given element. 
+
+(2) limiting max gap size
+-> naive solution - same as for max skip-gram length
+-> optimal solution - while creating nodes in the tree-based model, there should be an additional constraing that will check what would be the gap size if the node were created. 
+
+How to read this btw?
 Assuming original phrase is `The quick brown fox jumps over the lazy dog` and sample result like following: `The quick brown fox jumps over the dog (gaps: 0,0,0,0,0,0,1)`. 
 It means that there's a gap between last two words, also called tokens for the purposes of this project. 
 In this case there's one word missing (`lazy`), which is between `lazy` and `dog` in the original sentence. 
+
+Annother example:
+`The quick fox dog (gaps: 0,1,4)` -> `The` -> (0) -> `quick` -> (1) -> `fox` -> (4) -> `dog`
+There are two gaps in this skip-gram, one of size 1 (between `quick` and `fox`, there's `brown` missing), and the other of size 4 (between `fox` and `dog` there are missing `jumps`, `over`, `the` and `lazy`).
+
 
 ```
 The quick brown fox jumps over the lazy dog
