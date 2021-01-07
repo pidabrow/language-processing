@@ -52,7 +52,7 @@ Assuming original phrase `The quick brown fox jumps over the lazy dog` and sampl
 `The quick brown fox jumps over the dog (gaps: 0,0,0,0,0,0,1)`, it means that there's a gap between last two word. In this case there's one word missing (`lazy`), which is between `lazy` and `dog` in the original sentence.   
 `The` -> (0) -> `quick` -> (0) -> `brown` -> (0) -> `fox` -> (0) -> `jumps` -> (0) -> `over` -> (0) ->`the` -> (1) -> `dog`.
 
-**Annother example:**  
+**Another example:**  
 `The quick fox dog (gaps: 0,1,4)` -> `The` -> (0) -> `quick` -> (1) -> `fox` -> (4) -> `dog`  
 There are two gaps in this skip-gram, one of size 1 (between `quick` and `fox`, there's `brown` missing), and the other of size 4 (between `fox` and `dog` there are missing `jumps`, `over`, `the` and `lazy`).
 
