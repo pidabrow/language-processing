@@ -15,12 +15,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
+// no need for transaction management, since there's no DB connection currently. It could be also a @Component
 public class SkipGramService {
 
     public ResultDto generateSkipGrams(InputDto inputDto) {
-        List<Token> tokens = getTokens(inputDto.getText());
-
-        int maxGapLength = inputDto.getMaxGapLength();
+        List<Token> tokens = extractTokensFromText(inputDto.getText());
 
         Tree skipGramTree = new Tree();
         populateTree(skipGramTree, tokens);
@@ -65,14 +64,12 @@ public class SkipGramService {
             if(current.nonVisitedChildExists()) {
                 current = current.getNonVisitedChildByLowestId();
             } else {
-                List<Token> tokens = stack.stream()
-                        .filter(Node::isNotRoot)
-                        .map(Node::getToken)
-                        .collect(Collectors.toList());
-
-                SkipGramWrapper skipGramWrapper = new SkipGramWrapper(tokens);
-                System.out.println(skipGramWrapper);
-                skipGrams.add(skipGramWrapper);
+                List<Token> tokens = getAllTokensFromStack(stack);
+                if(!tokens.isEmpty()) {
+                    SkipGramWrapper skipGramWrapper = new SkipGramWrapper(tokens);
+                    System.out.println(skipGramWrapper);
+                    skipGrams.add(skipGramWrapper);
+                }
 
                 stack.pop();
                 current = current.getParent();
@@ -86,11 +83,7 @@ public class SkipGramService {
                 }
             } else {
                 while(current.getParent().getNonVisitedChildByLowestId().isVisited()) {
-                    List<Token> tokens = stack.stream()
-                            .filter(Node::isNotRoot)
-                            .map(Node::getToken)
-                            .collect(Collectors.toList());
-
+                    List<Token> tokens = getAllTokensFromStack(stack);
                     SkipGramWrapper skipGramWrapper = new SkipGramWrapper(tokens);
                     System.out.println(skipGramWrapper);
                     skipGrams.add(skipGramWrapper);
@@ -107,7 +100,14 @@ public class SkipGramService {
         return skipGrams;
     }
 
-    private List<Token> getTokens(String text) {
+    private List<Token> getAllTokensFromStack(Stack<Node> stack) {
+        return stack.stream()
+                .filter(Node::isNotRoot)
+                .map(Node::getToken)
+                .collect(Collectors.toList());
+    }
+
+    private List<Token> extractTokensFromText(String text) {
         List<Token> tokens = new ArrayList<>();
         String[] words = text.split(" ");
 

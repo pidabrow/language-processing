@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,7 +21,7 @@ public class LanguageProcessingController {
     private final SkipGramService skipGramService;
 
     @PutMapping("/n-grams")
-    public ResponseEntity<ResultDto> handleGenerateNGrams(InputDto inputDto) {
+    public ResponseEntity<ResultDto> handleGenerateNGrams(@RequestBody InputDto inputDto) {
         return new ResponseEntity<>(nGramService.generateNGrams(inputDto), HttpStatus.OK);
     }
 
@@ -35,12 +36,17 @@ public class LanguageProcessingController {
         return new ResponseEntity<>(nGramService.generateNGrams(inputDto), HttpStatus.OK);
     }
 
+    @PutMapping("/skip-grams")
+    public ResponseEntity<ResultDto> handleGenerateSkipGrams(@RequestBody InputDto inputDto) {
+        return new ResponseEntity<>(skipGramService.generateSkipGrams(inputDto), HttpStatus.OK);
+    }
+
     @GetMapping("/skip-grams/demo")
-    public ResponseEntity<ResultDto> handleGenerateSkipGrams() {
+    public ResponseEntity<ResultDto> handleGenerateSkipGramsDemo() {
         InputDto inputDto = InputDto.builder()
                 .text("The quick brown fox jumps over the lazy dog")
-                .maxProductLength(3)
-                .maxGapLength(3)
+//                .maxProductLength(3)
+//                .maxGapLength(3)
                 .mode(Mode.SKIP_GRAM)
                 .build();
         return new ResponseEntity<>(skipGramService.generateSkipGrams(inputDto), HttpStatus.OK);
