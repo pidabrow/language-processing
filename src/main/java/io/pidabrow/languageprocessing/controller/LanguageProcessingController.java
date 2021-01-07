@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,7 +19,7 @@ public class LanguageProcessingController {
     private final NGramService nGramService;
     private final SkipGramService skipGramService;
 
-    @GetMapping("/n-grams")
+    @PutMapping("/n-grams")
     public ResponseEntity<ResultDto> handleGenerateNGrams(InputDto inputDto) {
         return new ResponseEntity<>(nGramService.generateNGrams(inputDto), HttpStatus.OK);
     }

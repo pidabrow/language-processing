@@ -1,7 +1,7 @@
 # language-processing
 
 **Algorithm:**
-The application constructs a tree-based model for consecutive words. Based on this structure, extracting all possible skip-grams is done using Depth First Serach.
+The application constructs a tree-based model for consecutive words. Based on this structure, extracting all possible skip-grams is done using Depth First Serach algorithm.
 
 
 **TODO:**
@@ -10,13 +10,13 @@ The application constructs a tree-based model for consecutive words. Based on th
 
 * naive solution - having the tree-based model in place along with all possible skip-grams it's easy to filter out the skip-grams that don't match max length
 
-* optimal solution - while constructing the tree-based model, there should be information in each node what's the depth of given element. 
+* optimal solution - while constructing the tree-based model, there should be information in each node what's the depth of given element starting with root depth = 0. 
 
 (2) limiting max gap size
 
-* naive solution - same as for max skip-gram length
+* naive solution - same approach as for max skip-gram length
 
-* optimal solution - while creating nodes in the tree-based model, there should be an additional constraing that will check what would be the gap size if the node were created. 
+* optimal solution - while creating nodes in the tree-based model, there should be an additional constraint that will check what would be the gap size if the node were created. 
 
 Running locally
 ====================
@@ -25,7 +25,7 @@ Work in progress that needs some final tweaking. Running locally, on localhost:8
 **How to read this btw?**  
 Assuming original phrase `The quick brown fox jumps over the lazy dog` and sample result like following:  
 `The quick brown fox jumps over the dog (gaps: 0,0,0,0,0,0,1)`, it means that there's a gap between last two word. In this case there's one word missing (`lazy`), which is between `lazy` and `dog` in the original sentence.   
-`The` -> (0) -> `quick` -> (0) -> `brown` -> (0) -> `fox` -> (0) -> `jumps` -> (0) -> `over` -> (0) ->`the` -> (0) -> `dog`.
+`The` -> (0) -> `quick` -> (0) -> `brown` -> (0) -> `fox` -> (0) -> `jumps` -> (0) -> `over` -> (0) ->`the` -> (1) -> `dog`.
 
 **Annother example:**  
 `The quick fox dog (gaps: 0,1,4)` -> `The` -> (0) -> `quick` -> (1) -> `fox` -> (4) -> `dog`  

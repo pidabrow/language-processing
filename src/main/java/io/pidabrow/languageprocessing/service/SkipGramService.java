@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class SkipGramService {
@@ -24,8 +25,6 @@ public class SkipGramService {
         Tree skipGramTree = new Tree();
         populateTree(skipGramTree, tokens);
         List<SkipGramWrapper> skipGrams = extractSkipGramsFromTree(skipGramTree);
-
-
 
         return ResultDto.builder()
                 .text(inputDto.getText())
@@ -111,9 +110,11 @@ public class SkipGramService {
     private List<Token> getTokens(String text) {
         List<Token> tokens = new ArrayList<>();
         String[] words = text.split(" ");
-        for(int i = 0; i < words.length; i++) {
+
+        IntStream.range(0, words.length).forEach(i -> {
             tokens.add(new Token(words[i], i));
-        }
+        });
+
         return tokens;
     }
 }
