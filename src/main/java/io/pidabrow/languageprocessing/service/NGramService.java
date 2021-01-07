@@ -32,8 +32,6 @@ public class NGramService {
             }
         });
 
-
-
         return ResultDto.builder()
                 .text(inputDto.getText())
                 .mode(inputDto.getMode())

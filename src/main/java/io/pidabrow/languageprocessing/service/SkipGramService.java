@@ -44,7 +44,7 @@ public class SkipGramService {
 
         parent.getChildren()
                 .forEach(child -> {
-                    if(!child.getToken().equals(Tree.NIL_TOKEN)) {
+                    if(child.isNotNil()) {
                         int currentId = child.getToken().getTokenId();
                         List<Token> followingTokens = tokens.stream().filter(t -> t.getTokenId() > currentId).collect(Collectors.toList());
 
@@ -97,7 +97,7 @@ public class SkipGramService {
 
                     stack.pop();
                     current = current.getParent();
-                    if(current.getToken().equals(Tree.ROOT_TOKEN) && current.getNonVisitedChildByLowestId() == null) {
+                    if(current.isRoot() && current.getNonVisitedChildByLowestId() == null) {
                         break;
                     }
                 }

@@ -22,7 +22,7 @@ Running locally
 ====================
 Work in progress that needs some final tweaking. Running locally, on localhost:8080 and visiting localhost:8080/skip-gram/demo produces output like below. 
 
-**How to read this btw?**  
+**How to read this?**  
 Assuming original phrase `The quick brown fox jumps over the lazy dog` and sample result like following:  
 `The quick brown fox jumps over the dog (gaps: 0,0,0,0,0,0,1)`, it means that there's a gap between last two word. In this case there's one word missing (`lazy`), which is between `lazy` and `dog` in the original sentence.   
 `The` -> (0) -> `quick` -> (0) -> `brown` -> (0) -> `fox` -> (0) -> `jumps` -> (0) -> `over` -> (0) ->`the` -> (1) -> `dog`.
@@ -31,7 +31,9 @@ Assuming original phrase `The quick brown fox jumps over the lazy dog` and sampl
 `The quick fox dog (gaps: 0,1,4)` -> `The` -> (0) -> `quick` -> (1) -> `fox` -> (4) -> `dog`  
 There are two gaps in this skip-gram, one of size 1 (between `quick` and `fox`, there's `brown` missing), and the other of size 4 (between `fox` and `dog` there are missing `jumps`, `over`, `the` and `lazy`).
 
-
+**Note:**
+For the best user experience in browser, I recommend using JSON Formatter like this one for Google Chrome:
+https://github.com/callumlocke/json-formatter (there's a link to Play Store on the right)
 ```
 The quick brown fox jumps over the lazy dog
 The quick brown fox jumps over the lazy
@@ -543,4 +545,5 @@ the dog (gaps: 1)
 the
 lazy dog
 lazy
+dog
 ```
