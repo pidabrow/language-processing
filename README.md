@@ -20,7 +20,32 @@ The application constructs a tree-based model for consecutive words. Based on th
 
 Running locally
 ====================
-Work in progress that needs some final tweaking. Running locally, on localhost:8080 and visiting localhost:8080/skip-gram/demo produces output like below. 
+The algorithm is designed to generate all possible skip-grams with every possible gap size combination.  
+It needs some final tweaking (see two TODOs above, that will be implemented by Jan 10th 2021).  
+
+### API:
+* `GET /n-grams/demo`
+
+* `PUT /n-grams` sample payload:
+``` 
+{
+    "text" : "The quick brown fox jumps over the lazy dog",
+    "maxProductLength": 3
+}
+```
+
+* `GET /skip-grams`
+
+* `PUT /skip-grams/demo` sample payload:
+``` 
+{
+    "text" : "The quick brown fox jumps over the lazy dog"
+}
+```
+
+
+
+Running locally, on `localhost:8080` and visiting `localhost:8080/skip-gram/demo` produces output like below.
 
 **How to read this?**  
 Assuming original phrase `The quick brown fox jumps over the lazy dog` and sample result like following:  

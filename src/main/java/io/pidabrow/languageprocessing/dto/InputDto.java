@@ -16,9 +16,6 @@ public class InputDto {
     @NotBlank
     private final String text;
 
-    @NotNull
-    private final Mode mode;
-
     private final Integer maxProductLength;
     private final Integer maxGapLength;
 }

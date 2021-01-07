@@ -30,7 +30,6 @@ public class LanguageProcessingController {
         InputDto inputDto = InputDto.builder()
                 .text("The quick brown fox jumps over the lazy dog")
                 .maxProductLength(3)
-                .mode(Mode.N_GRAM)
                 .build();
 
         return new ResponseEntity<>(nGramService.generateNGrams(inputDto), HttpStatus.OK);
@@ -47,7 +46,6 @@ public class LanguageProcessingController {
                 .text("The quick brown fox jumps over the lazy dog")
 //                .maxProductLength(3)
 //                .maxGapLength(3)
-                .mode(Mode.SKIP_GRAM)
                 .build();
         return new ResponseEntity<>(skipGramService.generateSkipGrams(inputDto), HttpStatus.OK);
     }

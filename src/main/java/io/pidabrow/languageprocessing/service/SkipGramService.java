@@ -6,6 +6,7 @@ import io.pidabrow.languageprocessing.domain.Token;
 import io.pidabrow.languageprocessing.domain.Tree;
 import io.pidabrow.languageprocessing.dto.InputDto;
 import io.pidabrow.languageprocessing.dto.ResultDto;
+import io.pidabrow.languageprocessing.enumeration.Mode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class SkipGramService {
 
         return ResultDto.builder()
                 .text(inputDto.getText())
-                .mode(inputDto.getMode())
+                .mode(Mode.SKIP_GRAM)
                 .maxProductLength(inputDto.getMaxProductLength())
                 .result(skipGrams.stream().map(SkipGramWrapper::toString).collect(Collectors.toList()))
                 .build();

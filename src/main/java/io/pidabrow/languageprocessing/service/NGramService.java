@@ -2,6 +2,7 @@ package io.pidabrow.languageprocessing.service;
 
 import io.pidabrow.languageprocessing.dto.InputDto;
 import io.pidabrow.languageprocessing.dto.ResultDto;
+import io.pidabrow.languageprocessing.enumeration.Mode;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class NGramService {
 
         return ResultDto.builder()
                 .text(inputDto.getText())
-                .mode(inputDto.getMode())
+                .mode(Mode.N_GRAM)
                 .maxProductLength(inputDto.getMaxProductLength())
                 .result(nGrams)
                 .build();
