@@ -12,18 +12,21 @@ public class Node {
     private Node parent;
     private final Token token;
     private final List<Node> children;
+    private final int depth;
 
     private boolean visited;
 
     public Node(Token token) {
         this.token = token;
         this.children = new ArrayList<>();
+        this.depth = 0;
     }
 
     public Node(Token token, Node parent) {
         this.token = token;
         this.parent = parent;
         this.children = new ArrayList<>();
+        this.depth = this.parent.getDepth() + 1;
     }
 
     public void addChild(Token token, Node parent) {

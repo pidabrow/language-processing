@@ -21,8 +21,9 @@ public class SkipGramService {
 
     public ResultDto generateSkipGrams(InputDto inputDto) {
         List<Token> tokens = extractTokensFromText(inputDto.getText());
+        int maxTreeDepth = inputDto.getMaxProductLength();
 
-        Tree skipGramTree = new Tree();
+        Tree skipGramTree = new Tree(maxTreeDepth);
         populateTree(skipGramTree, tokens);
         List<SkipGramWrapper> skipGrams = extractSkipGramsFromTree(skipGramTree);
 
@@ -35,20 +36,20 @@ public class SkipGramService {
     }
 
     public void populateTree(Tree tree, List<Token> tokens) {
-        populateChildren(tree.getRoot(), tokens);
+        populateChildren(tree.getRoot(), tree.getMaxTreeDepth(), tokens);
     }
 
-    private void populateChildren(Node parent, List<Token> tokens) {
+    private void populateChildren(Node parent, int treeMaxDepth, List<Token> tokens) {
         parent.addChild(Tree.NIL_TOKEN, parent);
         tokens.forEach(token -> parent.addChild(token, parent));
 
         parent.getChildren()
                 .forEach(child -> {
-                    if(child.isNotNil()) {
+                    if(child.isNotNil() && child.getDepth() < treeMaxDepth) {
                         int currentId = child.getToken().getTokenId();
                         List<Token> followingTokens = tokens.stream().filter(t -> t.getTokenId() > currentId).collect(Collectors.toList());
 
-                        populateChildren(child, followingTokens);
+                        populateChildren(child, treeMaxDepth, followingTokens);
                     }
                 });
     }

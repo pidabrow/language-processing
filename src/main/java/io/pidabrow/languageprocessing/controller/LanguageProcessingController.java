@@ -44,8 +44,8 @@ public class LanguageProcessingController {
     public ResponseEntity<ResultDto> handleGenerateSkipGramsDemo() {
         InputDto inputDto = InputDto.builder()
                 .text("The quick brown fox jumps over the lazy dog")
-//                .maxProductLength(3)
-//                .maxGapLength(3)
+                .maxProductLength(Integer.MAX_VALUE)
+//                .maxGapLength(Integer.MAX_VALUE)
                 .build();
         return new ResponseEntity<>(skipGramService.generateSkipGrams(inputDto), HttpStatus.OK);
     }
